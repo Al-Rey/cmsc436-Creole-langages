@@ -29,8 +29,8 @@ def root():
         {'lat':18.7357,'lon':-70.1627,'tooltip':'Dominican Republic Spanish Haitian Creole'},
         {'lat':18.9712	,'lon':-72.2852,'tooltip':'Haiti French Haitian Creole'},
         {'lat':18.1096,'lon':-77.2975,'tooltip':'Jamaica English Jamaican Patois'},
-        {'lat':18.2208,'lon':-66.5901,'tooltip':'Puert Rico Spanish'},
-        {'lat':21.5218,'lon':-77.7812,'tooltip':'Cuba Spanish'}
+        {'lat':18.2208,'lon':-66.5901,'tooltip':'Puert Rico (Haitian Creole Minority Population)'},
+        {'lat':21.5218,'lon':-77.7812,'tooltip':'Cuba (Haitian Creole Minority Population)'}
     ]
 
     return render_template("index.html", markers=markers)
