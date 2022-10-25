@@ -31,9 +31,34 @@ for element in y:
         words.append(element.text)
     count += 1
 
-print(words[0])
-print(len(words))
+# print(words[0])
+# print(len(words))
 
 a = words[0].split("\n")
-print(ord(a[0]))
+# print(a[0] == "")
 # print(a)
+
+wordlist = pd.DataFrame(columns=["word", "creole_word"])
+
+for entry in a:
+    if entry != "":  # check if the itme isn't an empty string
+        if "/" in entry:
+            text = entry.split("/")
+            print(text)
+            text[0] = text[0].strip()
+            text[1] = text[1].strip()
+            
+            wordlist.loc[len(wordlist.index)] = text
+
+
+print(wordlist.head(10))
+
+
+
+
+
+"""
+Links Used:
+
+
+"""
