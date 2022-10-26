@@ -21,6 +21,9 @@
 
 
     //LOOKUP OPTIONS FOR DIFFERENT COLOR MARKERS
+    //    Probaly going to use GeoJson objects
+    //    https://geojson.org/
+    //    https://leafletjs.com/reference.html
     {% for marker in markers %}
       L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).addTo(map)
       .bindTooltip("{{ marker['tooltip'] }}")
