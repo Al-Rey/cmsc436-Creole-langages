@@ -1,0 +1,16 @@
+    //LOOKUP OPTIONS FOR DIFFERENT COLOR MARKERS
+    //    Probaly going to use GeoJson objects
+    //    https://geojson.org/
+    //    https://leafletjs.com/reference.html
+    //    https://leafletjs.com/examples/geojson/ -- adding geojson stuff and color for markers
+    //    https://geojson.io/#map=2/0/20 -- adding stuff to geojson marker
+    //    https://www.gistechsolutions.com/leaflet/DEMO/Simple/indexMap1.html -- geojson data setup
+    //    https://gis.stackexchange.com/questions/317262/how-to-change-the-color-of-geojson-layer
+
+
+
+##
+## https://medium.com/geekculture/how-to-make-a-web-map-with-pythons-flask-and-leaflet-9318c73c67c3
+## https://www.askpython.com/python-modules/flask/flask-forms
+##
+##

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Flask Leaflet Website</title>
+  <title>Flask Leaflet GeoJson Creole Language Dictionary Map</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/universal.css') }}" />
@@ -17,17 +17,29 @@
 <body>
   <div id="map"></div>
   <script src="{{ url_for('static', filename='js/universal.js') }}" /></script>
-  <script>
+  <script type="text/javascript">
 
 
-    //LOOKUP OPTIONS FOR DIFFERENT COLOR MARKERS
-    {% for marker in markers %}
-      L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).addTo(map)
-      .bindTooltip("{{ marker['tooltip'] }}")
-    {% endfor %}
-    
+  // PYTHON VARIABLE COMES IN HERE -- FUNCTION TO TRICK CODE DEFINED IN UNIVERSAL.JS
+  geojsonFeature = myFunc({{markers|tojson}});
+
+  //Adding layer to add different points
+  var myLayer = L.geoJSON().addTo(map);
+
+  //This does not work yet -- it should allow for changing colors
+  var myStyle = { 
+      "color": "#ff0000"
+  };
+
+  //Going through the json and adding points to map
+  var layerGroup = L.geoJSON(geojsonFeature, {
+      style:myStyle,
+      onEachFeature: function (feature, layer) {
+        layer.bindTooltip('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.name2+'</p>');
+      }
+    }).addTo(map);
+
 
   </script>
 </body>
-
 </html>
