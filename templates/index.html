@@ -17,45 +17,29 @@
 <body>
   <div id="map"></div>
   <script src="{{ url_for('static', filename='js/universal.js') }}" /></script>
-  <script type="text/javascript" src="locations.json">
+  <script type="text/javascript">
 
 
-    /*
-    var mydata = JSON.parse(locations);
-    var myLayer = L.geoJSON().addTo(map);
+  // PYTHON VARIABLE COMES IN HERE -- FUNCTION TO TRICK CODE DEFINED IN UNIVERSAL.JS
+  geojsonFeature = myFunc({{markers|tojson}});
 
-    var myStyle = { 
-        "color": "#ff0000"
-    };
+  //Adding layer to add different points
+  var myLayer = L.geoJSON().addTo(map);
 
-    var geojson = L.geoJson(mydata, {
+  //This does not work yet -- it should allow for changing colors
+  var myStyle = { 
+      "color": "#ff0000"
+  };
 
-        style: myStyle,
-
-        onEachFeature: function (feature, layer) {
-            layer.bindPopup(feature.properties.popupContent);
-        }
-    });
-    geojson.addTo(myLayer);
-    */
-
-    //LOOKUP OPTIONS FOR DIFFERENT COLOR MARKERS
-    //    Probaly going to use GeoJson objects
-    //    https://geojson.org/
-    //    https://leafletjs.com/reference.html
-    //    https://leafletjs.com/examples/geojson/ -- adding geojson stuff and color for markers
-    //    https://geojson.io/#map=2/0/20 -- adding stuff to geojson marker
-    //    https://www.gistechsolutions.com/leaflet/DEMO/Simple/indexMap1.html -- geojson data setup
-    //    https://gis.stackexchange.com/questions/317262/how-to-change-the-color-of-geojson-layer
-    //{% for marker in markers %}
-    //  L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).addTo(map)
-    //  .bindTooltip("{{ marker['tooltip'] }}")
-    //{% endfor %}
-
-    //L.geoJSON(markers).addTo(map);
+  //Going through the json and adding points to map
+  var layerGroup = L.geoJSON(geojsonFeature, {
+      style:myStyle,
+      onEachFeature: function (feature, layer) {
+        layer.bindTooltip('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.name2+'</p>');
+      }
+    }).addTo(map);
 
 
   </script>
 </body>
-
 </html>
