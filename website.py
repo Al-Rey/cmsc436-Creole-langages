@@ -17,6 +17,7 @@ def root():
     #Getting user input to query database
     word = request.form
 
+    #Opening the locations.json file for reading/writing
     f = open("locations.json")
     markers = json.load(f)
 
