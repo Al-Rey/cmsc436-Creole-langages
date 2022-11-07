@@ -6,6 +6,7 @@ function myFunc(vars) {
 
 //Creating the map
 var map = L.map('map').fitWorld();
+map.setZoom(2);
 
 //Adding OpenStreemap credits -- this needs to be here legally speaking
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

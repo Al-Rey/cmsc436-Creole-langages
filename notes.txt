@@ -21,3 +21,5 @@
         {'lat':18.2208,'lon':-66.5901,'tooltip':'Puert Rico (Haitian Creole Minority Population)'},
         {'lat':21.5218,'lon':-77.7812,'tooltip':'Cuba (Haitian Creole Minority Population)'}
     ]"""
+
+    export FLASK_APP=website

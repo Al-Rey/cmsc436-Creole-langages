@@ -1,8 +1,6 @@
 from flask import Flask, render_template,request
-import os
 import json
 import csv
-import sys
 
 app = Flask(__name__)
 
@@ -26,7 +24,6 @@ def read_database(word,creole):
 def input():
     return render_template("input.html")
 
-
 # Interactive map
 @app.route('/index', methods = ['POST', 'GET'])
 def root():
@@ -43,7 +40,7 @@ def root():
         creole_dict["features"].append(
             {
             "type":"Feature",
-            "properties":{"word": word, "creole_word":creole_word[creole]},
+            "properties":{"creole_language": creole, "word": word, "creole_word":creole_word[creole]},
             "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Point"}
             })
 
@@ -56,4 +53,4 @@ def root():
     f = open("locations.json")
     markers = json.load(f)
 
-    return render_template("index.html",markers=markers,word=word)
+    return render_template("index.html",markers=markers)

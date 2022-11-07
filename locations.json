@@ -1,1 +1,1 @@
-{"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"word": "abduct", "creole_word": "['kidnape', ' anlve']"}, "geometry": {"coordinates": [-72.285, 18.9712], "type": "Point"}}]}
+{"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"creole_language": "haitian", "word": "aback", "creole_word": "['pa sipriz (taken by surprise)']"}, "geometry": {"coordinates": [-72.285, 18.9712], "type": "Point"}}]}
