@@ -35,7 +35,7 @@
   var layerGroup = L.geoJSON(geojsonFeature, {
       style:myStyle,
       onEachFeature: function (feature, layer) {
-        layer.bindTooltip('<h1>'+feature.properties.name+'</h1><p>name: '+feature.properties.name2+'</p>');
+        layer.bindTooltip('<h1>'+feature.properties.word+'</h1><p>Creole Word: '+feature.properties.creole_word+'</p>');
       }
     }).addTo(map);
 
