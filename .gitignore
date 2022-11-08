@@ -1,2 +1,4 @@
 .ipynb_checkpoints/
 locations.json
+__pycache__/website.cpython-39.pyc
+.DS_Store
