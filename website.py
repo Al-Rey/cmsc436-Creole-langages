@@ -5,10 +5,10 @@ import csv
 app = Flask(__name__)
 
 ##  Global variables to define creole dictionary location and coordinates
-##
-CREOLE_LOCATIONS = {"haitian_creole": [-72.285,18.9712], "jamaican_creole": [-77.2975,18.1096], "cayman": [-81.2546,19.3133]}
-CREOLE_DICTIONARY_LIST = {"haitian_creole":"scraping_scripts/hatian_creole_dictionary_v3.csv","jamaican_creole":"scraping_scripts/Jamaican Creole.csv"}
-CREOLE_LIST = ["haitian_creole","jamaican_creole"]
+##,[-70.1627,18.7357]
+CREOLE_LOCATIONS = {"Haitian Creole": [[-72.285,18.9712],[-70.1627,18.7357]], "Jamaican Creole": [[-77.2975,18.1096]], "cayman_creole": [[-81.2546,19.3133]]}
+CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v3.csv","Jamaican Creole":"scraping_scripts/Jamaican Creole.csv"}
+CREOLE_LIST = ["Haitian Creole","Jamaican Creole"]
 WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
 #Reading database to find if word appears in creole
@@ -40,12 +40,13 @@ def root():
     #Creating Python Dictionary in form of geojson to be converted to json later
     creole_dict = {"type":"FeatureCollection","features":[]}
     for creole in creole_word:
-        creole_dict["features"].append(
-            {
-            "type":"Feature",
-            "properties":{"creole_language": creole, "word": word, "creole_word":creole_word[creole]},
-            "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Point"}
-            })
+        for latlon in CREOLE_LOCATIONS[creole]:
+            creole_dict["features"].append(
+                {
+                "type":"Feature",
+                "properties":{"creole_language": creole, "word": word, "creole_word":creole_word[creole]},
+                "geometry":{"coordinates":latlon,"type":"Point"}
+                })
 
     #Converting Python Dictionary to Json
     creole_json = json.dumps(creole_dict)
