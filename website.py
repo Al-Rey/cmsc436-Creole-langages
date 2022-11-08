@@ -6,9 +6,9 @@ app = Flask(__name__)
 
 ##  Global variables to define creole dictionary location and coordinates
 ##
-CREOLE_LOCATIONS = {"haitian": [-72.285,18.9712], "jamaican_patwa": [-77.2975,18.1096], "cayman": [-81.2546,19.3133]}
-CREOLE_DICTIONARY_LIST = {"haitian":"scraping_scripts/hatian_creole_dictionary_v3.csv","jamaican_patwa":"scraping_scripts/Jamaican Creole.csv"}
-CREOLE_LIST = ["haitian","jamaican_patwa"]
+CREOLE_LOCATIONS = {"haitian_creole": [-72.285,18.9712], "jamaican_creole": [-77.2975,18.1096], "cayman": [-81.2546,19.3133]}
+CREOLE_DICTIONARY_LIST = {"haitian_creole":"scraping_scripts/hatian_creole_dictionary_v3.csv","jamaican_creole":"scraping_scripts/Jamaican Creole.csv"}
+CREOLE_LIST = ["haitian_creole","jamaican_creole"]
 WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
 #Reading database to find if word appears in creole
