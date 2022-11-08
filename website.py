@@ -9,6 +9,7 @@ app = Flask(__name__)
 CREOLE_LOCATIONS = {"haitian": [-72.285,18.9712], "jamaican_patwa": [-77.2975,18.1096], "cayman": [-81.2546,19.3133]}
 CREOLE_DICTIONARY_LIST = {"haitian":"scraping_scripts/hatian_creole_dictionary_v3.csv","jamaican_patwa":"scraping_scripts/Jamaican Creole.csv"}
 CREOLE_LIST = ["haitian","jamaican_patwa"]
+WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
 #Reading database to find if word appears in creole
 def read_database(word,creole):
@@ -17,7 +18,7 @@ def read_database(word,creole):
         for row in reader:
             if row['word'].rstrip() == word:
                 return (row['creole_word'])
-    return("WORD_NOT_FOUND")
+    return(WORD_NOT_FOUND)
 
 #User word/phrase input
 @app.route('/')
@@ -32,7 +33,9 @@ def root():
     word = request.form["Word/Phrase"]
     creole_word = {}
     for creole in CREOLE_LIST:
-        creole_word[creole] = read_database(word,creole)
+        temp = read_database(word,creole)
+        if temp != WORD_NOT_FOUND:
+            creole_word[creole] = temp
 
     #Creating Python Dictionary in form of geojson to be converted to json later
     creole_dict = {"type":"FeatureCollection","features":[]}
