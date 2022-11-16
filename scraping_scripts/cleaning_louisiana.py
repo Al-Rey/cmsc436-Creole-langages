@@ -123,7 +123,7 @@ def get_word_data(page_url):
         # the "english" column
         item = item.split(";")
         lang_df.loc[len(lang_df.index)-1, "word"] = item
-        lang_df.loc[len(lang_df.index)-1, "creole name"] = "Lousiana Creole"
+        lang_df.loc[len(lang_df.index)-1, "creole name"] = "Louisiana Creole"
 
     return lang_df # return the final dataframe
 
@@ -174,7 +174,7 @@ def parse():
     print(final_df.head(10))    
     print(final_df.size)
 
-    final_df.to_csv("lousiana_creole_dictionary.csv") # convert the dataframe to a CSV file
+    final_df.to_csv("louisiana_creole_dictionary.csv") # convert the dataframe to a CSV file
     # copy.to_json("lousiana_creole_dictionary.json") # this doesn't want to work for some reason :/
 
 
