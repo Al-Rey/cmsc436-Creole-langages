@@ -12,14 +12,23 @@ def read_database(word,creole):
     with open(CREOLE_DICTIONARY_LIST[creole],'r',newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            if row['word'].rstrip() == word:
+            if row['word'].rstrip().lower() == word:
                 return (row['creole_word'])
     return(WORD_NOT_FOUND)
 
 
 #Reading database to find which creole languages said creole word appears in
-def read_creole(word):
-    return
+def read_creole(word,creole):
+    with open(CREOLE_DICTIONARY_LIST[creole],'r',newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if type(row["creole_word"] == list):
+                for sub_word in row["creole_word"]:
+                    if sub_word.rstrip().lower() == word:
+                        return (sub_word)
+            if row['creole_word'].rstrip().lower() == word:
+                return (row['word'])
+    return(WORD_NOT_FOUND)
 
 #Returns makers if input is creole -> english
 def creole_markers(word):
