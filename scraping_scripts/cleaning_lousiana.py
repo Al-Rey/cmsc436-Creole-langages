@@ -48,59 +48,68 @@ def get_word_data(page_url):
     # print("length of table:", len(table)) 
 
     for row in table:
-        entry = row.find_all("span", lang=True)
-        # print("length of entry:", len(entry))
+        entry = row.find_all("span")
+
         # inner loop - parses the data form each page
         saw_split = False
         item = ""
         for val in entry:
-
+            # print(val)
             cur_val = val.string
             
             # print(cur_val)
-            if cur_val:
-
-                # if there are multiple part of speech labels. This was made an if case to
-                # ensure that we don't accidentally come across an actual word with commas in
-                # it and assume that it is the part of speech labels
-                if "," in cur_val and val["lang"] != "lou":
-                    cur_val = cur_val.split(",")
-                    for x in cur_val:
-                        if x.strip() in word_parts[2:]: 
-                            # only check for the parts of speech that is not a verb or a noun. Just because
-                            # those are only one letter and they could appear in normal words. You are also not very
-                            # likely to find a word that can be both a noun and a verb
-                            saw_split = True
-                            lang_df.loc[len(lang_df.index), "creole"] = item
-                            item = ""
-                            break
-                    
-                    if saw_split:
-                        continue
-                    else:
-                        # end the program if we find an error case
-                        print("we found and edge case:", cur_val)
-                        exit(0)
-
+            # if cur_val:
+            if val.has_attr("lang"):
                 # we don't know if we are loo
-                if cur_val not in word_parts and not cur_val.isdigit():
+                cur_val = val.string
+                if not cur_val:
+                    continue
+
+                if not cur_val.isdigit():
                     if saw_split == True and val["lang"] == "lou":
                         continue
-                    item += cur_val
-                else:
-                    if saw_split == False:
-                        saw_split = True
-                        lang_df.loc[len(lang_df.index), "creole"] = item
-                        item = ""
+
+                    if "," in cur_val and val["lang"] != "lou":
+                        saw = False
+                        cur_val = cur_val.split(",")
+                        for x in cur_val: # iterate through the array made by splitting at the comma
+                            if x.strip() in word_parts[:]: 
+                                # only check for the parts of speech that is not a verb or a noun. Just because
+                                # those are only one letter and they could appear in normal words. You are also not very
+                                # likely to find a word that can be both a noun and a verb
+                                saw = True
+                                if saw_split == False:
+                                    saw_split = True
+                                    lang_df.loc[len(lang_df.index), "creole"] = item
+                                    item = ""
+                                break
+                        
+                        if saw:
+                            continue
+                        else:
+                            print(cur_val)
+
+                    cur_val = "".join(cur_val)
+
+                    if cur_val not in word_parts:
+                        item += cur_val
+                        
+            elif val.has_attr("class"):
+                if val["class"] == ["partofspeech"] and saw_split == False:
+                    saw_split = True
+                    lang_df.loc[len(lang_df.index), "creole"] = item
+                    item = ""
 
         item = item.split(";")
         lang_df.loc[len(lang_df.index)-1, "english"] = item
+    # print("size of lang_df:", lang_df.shape)
+    # print(lang_df.head())
     return lang_df
 
 def parse():
     final_df = pd.DataFrame(columns=["creole", "english"])
-    # letters = "abcdefghijklmnoprstvwyz" 
-    letters = "abcdef"
+    letters = "abcdefghijklmnoprstvwyz" 
+    # letters = "a"
     letter_base_url = "https://www.webonary.org/louisiana-creole/browse/browse-vernacular/?letter={}&key=lou"
     base_url = "https://www.webonary.org/louisiana-creole/browse/browse-vernacular/"
     # this would be in the outerloop that loops through the pages on the website
@@ -119,72 +128,22 @@ def parse():
             for index in page_urls:
                 new_url = base_url + index["href"]
                 hold = get_word_data(new_url)
-                print("size of hold:", hold.size)
-                # pd.concat([final_df, hold], ignore_index=False)
+                # print("size of hold:", hold.shape)
+                final_df = pd.concat([final_df, hold], ignore_index=False)
         elif len(table) == 0:
             hold = get_word_data(url)
-            print("size of hold:", hold.size)
+            # print("size of hold:", hold.shape)
+            final_df = pd.concat([final_df, hold], ignore_index=False)
         else:
             print("we found an edge case with table size:", len(table))
             exit(0)
         
-        pd.concat([final_df, hold], ignore_index=False)
 
-    """
-    # table = soup.find_all('div', attrs={"class":"entry"})
-    # print("length of table:", len(table)) 
-
-    # for row in table:
-    #     entry = row.find_all("span", lang=True)
-    #     print("length of entry:", len(entry))
-    #     # inner loop - parses the data form each page
-    #     saw_split = False
-    #     item = ""
-    #     for val in entry:
-
-    #         cur_val = val.string
-            
-    #         # print(cur_val)
-    #         if cur_val:
-
-    #             # if there are multiple part of speech labels. This was made an if case to
-    #             # ensure that we don't accidentally come across an actual word with commas in
-    #             # it and assume that it is the part of speech labels
-    #             if "," in cur_val:
-    #                 cur_val = cur_val.split(",")
-    #                 for x in cur_val:
-    #                     if x.strip() in word_parts[2:]: 
-    #                         # only check for the parts of speech that is not a verb or a noun. Just because
-    #                         # those are only one letter and they could appear in normal words. You are also not very
-    #                         # likely to find a word that can be both a noun and a verb
-    #                         saw_split = True
-    #                         lang_df.loc[len(lang_df.index), "creole"] = item
-    #                         item = ""
-    #                         break
-                    
-    #                 if saw_split:
-    #                     continue
-    #                 else:
-    #                     # end the program if we find an error case
-    #                     print("we found and edge case:", cur_val)
-    #                     exit(0)
-
-    #             # we don't know if we are loo
-    #             if cur_val not in word_parts and not cur_val.isdigit():
-    #                 if saw_split == True and val["lang"] == "lou":
-    #                     continue
-    #                 item += cur_val
-    #             else:
-    #                 if saw_split == False:
-    #                     saw_split = True
-    #                     lang_df.loc[len(lang_df.index), "creole"] = item
-    #                     item = ""
-
-    #     item = item.split(";")
-    #     lang_df.loc[len(lang_df.index)-1, "english"] = item   
-    """
     print(final_df.head(10))    
     print(final_df.size)
+
+    final_df.to_csv("lousiana_creole_dictionary.csv")
+    final_df.to_json("lousiana_creole_dictionary.json", orient="index")
 
 
 if __name__ == "__main__":
