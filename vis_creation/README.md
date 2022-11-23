@@ -1,5 +1,5 @@
 # Static Visualizations
-This folder contains the script(s) that will be used to generate the static visualizations that will be shown to the user along with the map. These visualizaitons are to show infprimation about the creole langauges as a whole as opposed to the map which only looks at individual words.
+This folder contains the script(s) that will be used to generate the static visualizations that will be shown to the user along with the map. These visualizaitons are to show inforimation about the creole langauges as a whole as opposed to the map which only looks at individual words.
 
 # Tools used
 Python:
@@ -9,7 +9,7 @@ Python:
 - nltk library ver. 3.7
 
 # Descriptions of Visualizations Generated
-The visualizaitons generated in the generate.py plots the frequency of the most and least common ngrams for the given creole as bar charts.
+The visualizaitons generated in the `generate.py` plots the frequency of the most and least common ngrams for the given creole as bar charts.
 
 # Sources
 - https://www.analyticsvidhya.com/blog/2021/09/what-are-n-grams-and-how-to-implement-them-in-python/ 
