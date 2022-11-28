@@ -4,6 +4,10 @@ function myFunc(vars) {
     return vars
 }
 
+function onEachFeature(feature, layer) {
+      layer.bindTooltip('<h1><p>Creole Language: '+feature.properties.creole_language+'</p>'+'<h1><p> Creole Word: '+feature.properties.creole_word+'</p>'+'</h1><p>English Word: '+feature.properties.word+'</p>');
+}
+
 //Creating the map
 var map = L.map('map').fitWorld();
 map.setZoom(3);

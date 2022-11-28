@@ -13,19 +13,17 @@ def input():
 @app.route('/index', methods = ['POST', 'GET'])
 def root():
 
-    isCreole = False
     #Getting user input to query database
     english_word = request.form.get('English')
     creole_word = request.form.get('Creole')
 
-    word = ""
-    if english_word != None:
+    isCreole = False
+    if creole_word != None:
+        word = creole_word
+        markers = creole_markers(word)
+    else:
         word = english_word
         markers = english_markers(word)
-    else:
-        word = creole_word
-        markers = english_markers(word)
-        isCreole = True
 
 
-    return render_template("index.html",markers=markers,isCreole=isCreole)
+    return render_template("index.html",markers=markers)

@@ -1,10 +1,13 @@
 import json
 import csv
+import ast
 
 ##  Global variables to define creole dictionary location and coordinates
-CREOLE_LOCATIONS = {"Haitian Creole": [[-72.285,18.9712],[-70.1627,18.7357]], "Jamaican Creole": [[-77.2975,18.1096]], "cayman_creole": [[-81.2546,19.3133]]}
-CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v3.csv","Jamaican Creole":"scraping_scripts/Jamaican Creole.csv"}
-CREOLE_LIST = ["Haitian Creole","Jamaican Creole"]
+CREOLE_LOCATIONS = {"Haitian Creole": [[-72.285,18.9712],[-70.1627,18.7357]], "Jamaican Creole": [[-77.2975,18.1096]], "Louisiana Creole": [[-91.9623,30.9843]]}
+CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v3.csv","Jamaican Creole":"scraping_scripts/Jamaican Creole.csv",
+"Louisiana Creole":"scraping_scripts/louisiana_creole_dictionary.csv"}
+CREOLE_LIST =  ["Haitian Creole","Jamaican Creole","Louisiana Creole"]
+COLOR_LIST = {"Haitian Creole":"blue","Jamaican Creole":"red","Louisiana Creole":"blue"}
 WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
 #Reading database to find if word appears in creole
@@ -12,27 +15,57 @@ def read_database(word,creole):
     with open(CREOLE_DICTIONARY_LIST[creole],'r',newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            if row['word'].rstrip().lower() == word:
+            if "[" in row['word']:
+                for sub_word in ast.literal_eval(row["word"]):
+                    if sub_word.rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
+                        return(row['creole_word'])
+            if row['word'].rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
                 return (row['creole_word'])
     return(WORD_NOT_FOUND)
 
 
 #Reading database to find which creole languages said creole word appears in
+#Reads Creole -- Returns English
 def read_creole(word,creole):
     with open(CREOLE_DICTIONARY_LIST[creole],'r',newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            if type(row["creole_word"] == list):
-                for sub_word in row["creole_word"]:
-                    if sub_word.rstrip().lower() == word:
-                        return (sub_word)
-            if row['creole_word'].rstrip().lower() == word:
+            if "[" in row['creole_word']:
+                for sub_word in ast.literal_eval(row["creole_word"]):
+                    if sub_word.rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
+                        return(row['word'])
+            if row['creole_word'].rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
                 return (row['word'])
     return(WORD_NOT_FOUND)
 
 #Returns makers if input is creole -> english
 def creole_markers(word):
-    return
+    english_word = {}
+    for creole in CREOLE_LIST:
+        temp = read_creole(word,creole) #temp = english word
+        if temp != WORD_NOT_FOUND:
+            english_word[creole] = temp # english_word["haitian"] = "hello"
+
+    english_dict = {"type":"FeatureCollection","features":[]}
+    for creole in english_word:
+        for latlon in CREOLE_LOCATIONS[creole]:
+            english_dict["features"].append(
+                {
+                "type":"Feature",
+                "properties":{"creole_language": creole, "word": english_word[creole], "creole_word":word},
+                "geometry":{"coordinates":latlon,"type":"Point"}
+                })
+
+    #Converting Python Dictionary to Json
+    english_json = json.dumps(english_dict)
+
+    #Saving Json to locations.json to be read by index.html
+    with open("locations.json", "w") as outfile:
+        outfile.write(english_json)
+    f = open("locations.json")
+    markers = json.load(f)
+
+    return(markers)
 
 
 #Returns makers if input is english -> creole
