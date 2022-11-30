@@ -4,7 +4,15 @@ import numpy as np
 import re
 
 from nltk.util import ngrams
-from matplotlib.figure import  Figure
+# from matplotlib.figure import  Figure
+from operator import add
+
+COLOR_KEY = { "louisiana": "marron",
+            "haitian" : "green",
+            "jamaican": "blue"
+}
+
+NUM_CREOLES = 3
 
 """
 Name: create_ngrams
@@ -108,9 +116,51 @@ def plot_ngrams(data_dict, creole_name, graph_color, n):
     plt.show()
     f.savefig("vis_Creation/"+file_name)
 
-
-def total_freq(x, y, z):
+def plot_count_pie():
     pass
+
+def plot_stacked_bars(total, dist, n):
+    # sort the dictionary so the ngrams are in order by letter combination
+    sorted_dic = sorted(total.items(), key=lambda x:x[1], reverse=True)[:10]
+    # keys = [item[0] for item in sorted_dic]
+
+    vals = {
+        "haitian": [],
+        "louisiana": [],
+        "jamaican": []
+    }
+    count = 0
+    for item in sorted_dic:
+        k = item[0]
+        count += 1
+        # print(k, "values")
+        # print(dist[k])
+        # print(len(dist[k]))
+        for creole in dist[k].keys():
+            # print(creole)
+            vals[creole].append(dist[k][creole])
+            # vals[creole]
+
+        for val in vals.keys():
+            if len(vals[val]) != count:
+                vals[val].append(0)
+
+            
+    labels = list(map(str, [item[0] for item in sorted_dic])) # get the ngram names
+    
+    prev = [0] * 10
+    for key in vals.keys():
+        plt.bar(labels, vals[key], bottom=prev, color=COLOR_KEY[key][0])
+        prev = list(map(add, prev, vals[key]))
+
+        """
+        plt.bar(x, y1, color='r')
+plt.bar(x, y2, bottom=y1, color='b')
+plt.bar(x, y3, bottom=y1+y2, color='y')
+plt.bar(x, y4, bottom=y1+y2+y3, color='g')
+        """
+    plt.legend(vals.keys())
+    plt.show()
 
 if __name__ == '__main__':
     creaoles = ["louisiana", "haitian", "jamaican"]
@@ -131,7 +181,7 @@ if __name__ == '__main__':
     haitian_df.dropna(inplace=True)
     jamaica_df.dropna(inplace=True)
    
-    # get the haitian words from each dataframe
+    # get the creole words from each dataframe
     words_louisiana = louisiana_df.loc[:, "creole_word"].tolist()
     words_haitian = haitian_df.loc[:, "word"].tolist()
     words_jamaican = jamaica_df.loc[:, "Words"].tolist()
@@ -151,13 +201,26 @@ if __name__ == '__main__':
     # plot_ngrams(jamaican_bigrams, "Jamaican Creole", "blue", n)
 
 
-    total_freq = {}
+    cum_freq = {}
+    freq_dist = {}
+    i = ()
     # labels = list(map(str, [item[0] for item in sorted_dic]))
     for key in list(louisiana_bigrams.keys()):
-        total_freq[key] = {"lousiana":louisiana_bigrams[key]}
+        freq_dist[key] = freq_dist.get(key, {})
+        freq_dist[key]["louisiana"] = louisiana_bigrams[key]
+        cum_freq[key] = cum_freq.get(key, 0) + louisiana_bigrams[key]
 
-    for key in list(louisiana_bigrams.keys()):
-        total_freq[key] = {"lousiana":louisiana_bigrams[key]}
+    for key in list(haitian_bigrams.keys()):
+        freq_dist[key] = freq_dist.get(key, {})
+        freq_dist[key]["haitian"] = haitian_bigrams[key]
+        cum_freq[key] = cum_freq.get(key, 0) + haitian_bigrams[key]
 
+    for key in list(jamaican_bigrams.keys()):
+        i = key
+        freq_dist[key] = freq_dist.get(key, {})
+        freq_dist[key]["jamaican"] = jamaican_bigrams[key]
+        cum_freq[key] = cum_freq.get(key, 0) + jamaican_bigrams[key]
 
-    print(total_freq)
+    plot_stacked_bars(cum_freq, freq_dist, 2)
+    # print(cum_freq[key])
+    # print(freq_dist)
