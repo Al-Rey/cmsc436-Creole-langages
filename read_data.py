@@ -5,10 +5,20 @@ import ast
 ##  Global variables to define creole dictionary location and coordinates
 TEMP = open("location_polygon.json")
 CREOLE_LOCATIONS = json.load(TEMP)
-CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v4.csv","Jamaican Creole":"scraping_scripts/Jamaican Creole.csv",
-"Louisiana Creole":"scraping_scripts/louisiana_creole_dictionary.csv"}
-CREOLE_LIST =  ["Haitian Creole","Jamaican Creole","Louisiana Creole"]
-COLOR_LIST = {"Haitian Creole":"#555555","Jamaican Creole":"#555555","Louisiana Creole":"#555555"}
+
+CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v4.csv",
+    "Jamaican Creole":"scraping_scripts/Jamaican Creole.csv",
+    "Louisiana Creole":"scraping_scripts/louisiana_creole_dictionary.csv",
+    "Martinique Creole":"scraping_scripts/Excelmartinique.csv",
+    "St. Lucia Creole":"scraping_scripts/stLucia.csv",
+    "Suriname Creole":"scraping_scripts/suriname.csv"
+}
+CREOLE_LIST =  ["Haitian Creole","Jamaican Creole","Louisiana Creole","Martinique Creole",
+    "St. Lucia Creole","Suriname Creole"]
+
+COLOR_LIST = {"Haitian Creole":"#555555","Jamaican Creole":"#555555","Louisiana Creole":"#555555",
+    "Martinique Creole":"#555555","St. Lucia Creole":"#555555","Suriname Creole":"#555555"}
+
 WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
 #Reading database to find if word appears in creole
@@ -19,6 +29,11 @@ def read_database(word,creole):
             if "[" in row['word']:
                 for sub_word in ast.literal_eval(row["word"]):
                     if sub_word.rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
+                        return(row['creole_word'])
+            if "," in row['word']:
+                comma_word = row['word'].split()
+                for sub_word in comma_word:
+                    if sub_word.rstrip().lstrip().lower().replace(",","") == word.rstrip().lstrip().lower():
                         return(row['creole_word'])
             if row['word'].rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
                 return (row['creole_word'])
@@ -34,6 +49,11 @@ def read_creole(word,creole):
             if "[" in row['creole_word']:
                 for sub_word in ast.literal_eval(row["creole_word"]):
                     if sub_word.rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
+                        return(row['word'])
+            if "," in row['creole_word']:
+                comma_word = row['creole_word'].split()
+                for sub_word in comma_word:
+                    if sub_word.rstrip().lstrip().lower().replace(",","") == word.rstrip().lstrip().lower():
                         return(row['word'])
             if row['creole_word'].rstrip().lstrip().lower() == word.rstrip().lstrip().lower():
                 return (row['word'])
