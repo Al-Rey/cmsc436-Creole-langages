@@ -3,11 +3,12 @@ import csv
 import ast
 
 ##  Global variables to define creole dictionary location and coordinates
-CREOLE_LOCATIONS = {"Haitian Creole": [[-72.285,18.9712],[-70.1627,18.7357]], "Jamaican Creole": [[-77.2975,18.1096]], "Louisiana Creole": [[-91.9623,30.9843]]}
-CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v3.csv","Jamaican Creole":"scraping_scripts/Jamaican Creole.csv",
+TEMP = open("location_polygon.json")
+CREOLE_LOCATIONS = json.load(TEMP)
+CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v4.csv","Jamaican Creole":"scraping_scripts/Jamaican Creole.csv",
 "Louisiana Creole":"scraping_scripts/louisiana_creole_dictionary.csv"}
 CREOLE_LIST =  ["Haitian Creole","Jamaican Creole","Louisiana Creole"]
-COLOR_LIST = {"Haitian Creole":"blue","Jamaican Creole":"red","Louisiana Creole":"blue"}
+COLOR_LIST = {"Haitian Creole":"#555555","Jamaican Creole":"#555555","Louisiana Creole":"#555555"}
 WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
 #Reading database to find if word appears in creole
@@ -48,13 +49,12 @@ def creole_markers(word):
 
     english_dict = {"type":"FeatureCollection","features":[]}
     for creole in english_word:
-        for latlon in CREOLE_LOCATIONS[creole]:
-            english_dict["features"].append(
-                {
-                "type":"Feature",
-                "properties":{"creole_language": creole, "word": english_word[creole], "creole_word":word},
-                "geometry":{"coordinates":latlon,"type":"Point"}
-                })
+        english_dict["features"].append(
+            {
+            "type":"Feature",
+            "properties":{"creole_language": creole, "word": english_word[creole], "creole_word":word},
+            "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Polygon"}
+            })
 
     #Converting Python Dictionary to Json
     english_json = json.dumps(english_dict)
@@ -79,13 +79,14 @@ def english_markers(word):
     #Creating Python Dictionary in form of geojson to be converted to json later
     creole_dict = {"type":"FeatureCollection","features":[]}
     for creole in creole_word:
-        for latlon in CREOLE_LOCATIONS[creole]:
-            creole_dict["features"].append(
-                {
-                "type":"Feature",
-                "properties":{"creole_language": creole, "word": word, "creole_word":creole_word[creole]},
-                "geometry":{"coordinates":latlon,"type":"Point"}
-                })
+        creole_dict["features"].append(
+            {
+            "type":"Feature",
+            "properties":{"creole_language": creole, "word": word, "creole_word":creole_word[creole],
+                "stroke": COLOR_LIST[creole],"fill": COLOR_LIST[creole],
+                "stroke-width": 2, "stroke-opacity": 1, "fill-opacity": 0.5},
+            "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Polygon"}
+            })
 
     #Converting Python Dictionary to Json
     creole_json = json.dumps(creole_dict)

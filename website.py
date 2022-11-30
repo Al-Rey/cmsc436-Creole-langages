@@ -17,7 +17,6 @@ def root():
     english_word = request.form.get('English')
     creole_word = request.form.get('Creole')
 
-    isCreole = False
     if creole_word != None:
         word = creole_word
         markers = creole_markers(word)

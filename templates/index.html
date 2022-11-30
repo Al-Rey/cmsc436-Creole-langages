@@ -29,15 +29,10 @@
   //Adding layer to add different points
   var myLayer = L.geoJSON().addTo(map);
 
-  //This does not work yet -- it should allow for changing colors
-  var myStyle = {
-      "color": "#ff0000",
-      "fill": "red"
-  };
+
 
   //Going through the json and adding points to map
   var layerGroup = L.geoJSON(geojsonFeature, {
-      style:myStyle,
       onEachFeature:onEachFeature
     }).addTo(map);
 
