@@ -109,7 +109,13 @@ def plot_ngrams(data_dict, creole_name, graph_color, n):
     f.savefig("vis_Creation/"+file_name)
 
 
+def total_freq(x, y, z):
+    pass
+
 if __name__ == '__main__':
+    creaoles = ["louisiana", "haitian", "jamaican"]
+
+
     # load our data frames
     haitian_df = pd.read_csv("scraping_scripts\hatian_creole_dictionary_v4.csv", index_col=0)
     jamaica_df = pd.read_csv("merging\Jamaican Creole.csv")
@@ -136,8 +142,22 @@ if __name__ == '__main__':
     haitian_bigrams = create_ngrams(words_haitian[:], n) 
     jamaican_bigrams = create_ngrams(words_jamaican[:], n) 
 
+    # print("Louisiana Bigrams")
+    # print(louisiana_bigrams)
 
     # plot the ngrams
-    plot_ngrams(louisiana_bigrams, "Louisiana Creole", "maroon", n)
-    plot_ngrams(haitian_bigrams, "Haitian Creole", "green", n)
-    plot_ngrams(jamaican_bigrams, "Jamaican Creole", "blue", n)
+    # plot_ngrams(louisiana_bigrams, "Louisiana Creole", "maroon", n)
+    # plot_ngrams(haitian_bigrams, "Haitian Creole", "green", n)
+    # plot_ngrams(jamaican_bigrams, "Jamaican Creole", "blue", n)
+
+
+    total_freq = {}
+    # labels = list(map(str, [item[0] for item in sorted_dic]))
+    for key in list(louisiana_bigrams.keys()):
+        total_freq[key] = {"lousiana":louisiana_bigrams[key]}
+
+    for key in list(louisiana_bigrams.keys()):
+        total_freq[key] = {"lousiana":louisiana_bigrams[key]}
+
+
+    print(total_freq)
