@@ -8,6 +8,11 @@ app = Flask(__name__)
 def input():
     return render_template("input.html")
 
+#Page of data analysis on language data
+@app.route('/images')
+def images():
+    return render_template("images.html")
+
 
 # Interactive map
 @app.route('/index', methods = ['POST', 'GET'])

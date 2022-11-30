@@ -5,7 +5,8 @@ function myFunc(vars) {
 }
 
 function onEachFeature(feature, layer) {
-      layer.bindTooltip('<h1><p>Creole Language: '+feature.properties.creole_language+'</p>'+'<h1><p> Creole Word: '+feature.properties.creole_word+'</p>'+'</h1><p>English/French Word: '+feature.properties.word+'</p>');
+      layer.bindTooltip('<h1><p>Creole Language: '+feature.properties.creole_language+'</p></h1>'+'<p>Creole Word: '+feature.properties.creole_word+'</p>'
+      +'<p>English/French Word: '+feature.properties.word+'</p>'+'<p>Acrolect: '+feature.properties.acrolect+'</p>');
 }
 
 //Creating the map

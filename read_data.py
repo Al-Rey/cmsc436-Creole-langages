@@ -9,15 +9,15 @@ CREOLE_LOCATIONS = json.load(TEMP)
 CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v4.csv",
     "Jamaican Creole":"scraping_scripts/Jamaican Creole.csv",
     "Louisiana Creole":"scraping_scripts/louisiana_creole_dictionary.csv",
-    "Martinique Creole":"scraping_scripts/Excelmartinique.csv",
+    "Martinique Antillean Creole":"scraping_scripts/Excelmartinique.csv",
     "St. Lucia Creole":"scraping_scripts/stLucia.csv",
-    "Suriname Creole":"scraping_scripts/suriname.csv"
+    "Saramaccan":"scraping_scripts/suriname.csv"
 }
-CREOLE_LIST =  ["Haitian Creole","Jamaican Creole","Louisiana Creole","Martinique Creole",
-    "St. Lucia Creole","Suriname Creole"]
+CREOLE_LIST =  ["Haitian Creole","Jamaican Creole","Louisiana Creole","Martinique Antillean Creole",
+    "St. Lucia Creole","Saramaccan"]
 
-COLOR_LIST = {"Haitian Creole":"#555555","Jamaican Creole":"#555555","Louisiana Creole":"#555555",
-    "Martinique Creole":"#555555","St. Lucia Creole":"#555555","Suriname Creole":"#555555"}
+ACROLECT_LIST = {"Haitian Creole":"French","Jamaican Creole":"English","Louisiana Creole":"French",
+    "Martinique Antillean Creole":"French","St. Lucia Creole":"French","Saramaccan":"English-Portugese"}
 
 WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
@@ -72,7 +72,8 @@ def creole_markers(word):
         english_dict["features"].append(
             {
             "type":"Feature",
-            "properties":{"creole_language": creole, "word": english_word[creole], "creole_word":word},
+            "properties":{"creole_language": creole, "word": english_word[creole], 
+                "creole_word":word,"acrolect": ACROLECT_LIST[creole]},
             "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Polygon"}
             })
 
@@ -102,9 +103,8 @@ def english_markers(word):
         creole_dict["features"].append(
             {
             "type":"Feature",
-            "properties":{"creole_language": creole, "word": word, "creole_word":creole_word[creole],
-                "stroke": COLOR_LIST[creole],"fill": COLOR_LIST[creole],
-                "stroke-width": 2, "stroke-opacity": 1, "fill-opacity": 0.5},
+            "properties":{"creole_language": creole, "word": word, 
+                "creole_word":creole_word[creole],"acrolect": ACROLECT_LIST[creole]},
             "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Polygon"}
             })
 
