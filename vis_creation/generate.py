@@ -7,12 +7,39 @@ from nltk.util import ngrams
 # from matplotlib.figure import  Figure
 from operator import add
 
-COLOR_KEY = { "louisiana": "marron",
+COLOR_KEY = { "louisiana": "#cd7c00",
             "haitian" : "green",
-            "jamaican": "blue"
+            "jamaican": "blue",
+            "surinam": "red"
 }
 
-NUM_CREOLES = 3
+TEST_IMG_DIR = "vis_creation\\test_images\\"
+IMG_DIR = "vis_Creation/"
+
+NUM_CREOLES = 4
+
+CREOLE_NAMES = ["louisiana", "haitian", "jamaican", "surinam"]
+
+def get_words(og_list):
+    pattern_paren = "\(.*\)"
+    blacklist = ["kreyol pronunciation"]
+    word_list = []
+    num_words = 0
+
+    for entry in og_list:
+        temp = re.sub(pattern_paren, "", entry)
+
+        if "," in temp:
+            temp = temp.split(",")
+            for word in temp:
+                if word.lower() not in blacklist:
+                    word_list.append(word.lower())
+                    num_words += 1
+        elif temp.lower() not in blacklist:
+            word_list.append(temp.lower())
+            num_words += 1
+
+    return word_list, num_words
 
 """
 Name: create_ngrams
@@ -114,28 +141,34 @@ def plot_ngrams(data_dict, creole_name, graph_color, n):
     
     # show the plot and save the viz
     plt.show()
-    f.savefig("vis_Creation/"+file_name)
+    f.savefig(TEST_IMG_DIR+file_name)
 
-def plot_count_pie():
-    pass
+def plot_count_pie(total_list, labels_list):
+    pie_colors = [COLOR_KEY[name] for name in labels_list]
+    plt.pie(total_list, labels=labels_list, colors=pie_colors)
+    plt.title("Distribution of Creole Words")
+    plt.show() 
+    plt.savefig(TEST_IMG_DIR+"creole_pie_plot.png")
 
-def plot_stacked_bars(total, dist, n):
+def plot_stacked_bars(total, dist, n, include_haitian=True, creoles=CREOLE_NAMES):
     # sort the dictionary so the ngrams are in order by letter combination
     sorted_dic = sorted(total.items(), key=lambda x:x[1], reverse=True)[:10]
-    # keys = [item[0] for item in sorted_dic]
 
-    vals = {
-        "haitian": [],
-        "louisiana": [],
-        "jamaican": []
-    }
+    # make the dictionary that will hold the individual frequency data for each creole
+    vals = {}
+    for name in creoles:
+        if name == "haitian" and include_haitian:
+            vals[name] = []
+        if name != "haitian":
+            vals[name] = []
+
+    # populate the dictionary with the frequency data for each individual creole
     count = 0
     for item in sorted_dic:
         k = item[0]
         count += 1
-        # print(k, "values")
-        # print(dist[k])
-        # print(len(dist[k]))
+        
+        # go though all the creoles that had that letter combindation
         for creole in dist[k].keys():
             # print(creole)
             vals[creole].append(dist[k][creole])
@@ -148,57 +181,59 @@ def plot_stacked_bars(total, dist, n):
             
     labels = list(map(str, [item[0] for item in sorted_dic])) # get the ngram names
     
+    # plot the stacks
     prev = [0] * 10
     for key in vals.keys():
-        plt.bar(labels, vals[key], bottom=prev, color=COLOR_KEY[key][0])
+        plt.bar(labels, vals[key], bottom=prev, color=COLOR_KEY[key])
         prev = list(map(add, prev, vals[key]))
 
-        """
-        plt.bar(x, y1, color='r')
-plt.bar(x, y2, bottom=y1, color='b')
-plt.bar(x, y3, bottom=y1+y2, color='y')
-plt.bar(x, y4, bottom=y1+y2+y3, color='g')
-        """
     plt.legend(vals.keys())
     plt.show()
 
 if __name__ == '__main__':
-    creaoles = ["louisiana", "haitian", "jamaican"]
-
+    # creaoles = ["louisiana", "haitian", "jamaican", "surinam"]
+    totals = {}
+    for name in CREOLE_NAMES:
+        totals[name] = 0
 
     # load our data frames
-    haitian_df = pd.read_csv("scraping_scripts\hatian_creole_dictionary_v4.csv", index_col=0)
-    jamaica_df = pd.read_csv("merging\Jamaican Creole.csv")
-    louisiana_df = pd.read_csv("scraping_scripts\louisiana_creole_dictionary.csv", index_col=0)
-
-    # get rid of the columns from each dataframe we don't need to save space
-    jamaica_df.drop(columns=["Unnamed: 2", "Country"], inplace=True)
-    haitian_df.drop(columns="creole name", inplace=True)
-    louisiana_df.drop(columns="creole name", inplace=True)
+    haitian_df = pd.read_csv("merging\hatian_creole_dictionary_v4.csv", usecols=[1])
+    jamaica_df = pd.read_csv("merging\Jamaican Creole.csv", usecols=["Words"])
+    louisiana_df = pd.read_csv("merging\louisiana_creole_dictionary.csv", usecols=["creole_word"])
+    surinam_df = pd.read_csv("merging\suriname.csv", usecols=["Creole_word"])
 
     # drop any NaN values from the dataframe
     louisiana_df.dropna(inplace=True)
     haitian_df.dropna(inplace=True)
     jamaica_df.dropna(inplace=True)
+    surinam_df.dropna(inplace=True)
    
     # get the creole words from each dataframe
-    words_louisiana = louisiana_df.loc[:, "creole_word"].tolist()
-    words_haitian = haitian_df.loc[:, "word"].tolist()
-    words_jamaican = jamaica_df.loc[:, "Words"].tolist()
+    words_col_louisiana = louisiana_df.loc[:, "creole_word"].tolist()
+    words_col_haitian = haitian_df.loc[:, "creole_word"].tolist()
+    words_col_jamaican = jamaica_df.loc[:, "Words"].tolist()
+    words_col_surinam = surinam_df.loc[:, "Creole_word"].tolist()
+
+    words_louisiana, totals["louisiana"] = get_words(words_col_louisiana)
+    words_haitian, totals["haitian"] = get_words(words_col_haitian)
+    words_jamaican, totals["jamaican"] = get_words(words_col_jamaican)
+    words_surinam, totals["surinam"] = get_words(words_col_surinam)
     
     # get the bigram data
     n = 3
     louisiana_bigrams = create_ngrams(words_louisiana[:], n) 
     haitian_bigrams = create_ngrams(words_haitian[:], n) 
     jamaican_bigrams = create_ngrams(words_jamaican[:], n) 
+    surinam_bigrams = create_ngrams(words_surinam[:], n) 
 
     # print("Louisiana Bigrams")
     # print(louisiana_bigrams)
 
     # plot the ngrams
-    # plot_ngrams(louisiana_bigrams, "Louisiana Creole", "maroon", n)
-    # plot_ngrams(haitian_bigrams, "Haitian Creole", "green", n)
-    # plot_ngrams(jamaican_bigrams, "Jamaican Creole", "blue", n)
+    plot_ngrams(louisiana_bigrams, "Louisiana Creole", COLOR_KEY["louisiana"], n)
+    plot_ngrams(haitian_bigrams, "Haitian Creole", COLOR_KEY["haitian"], n)
+    plot_ngrams(jamaican_bigrams, "Jamaican Creole", COLOR_KEY["jamaican"], n)
+    plot_ngrams(surinam_bigrams, "Surinam Creole", COLOR_KEY["surinam"], n)
 
 
     cum_freq = {}
@@ -221,6 +256,11 @@ if __name__ == '__main__':
         freq_dist[key]["jamaican"] = jamaican_bigrams[key]
         cum_freq[key] = cum_freq.get(key, 0) + jamaican_bigrams[key]
 
+    for key in list(surinam_bigrams.keys()):
+        i = key
+        freq_dist[key] = freq_dist.get(key, {})
+        freq_dist[key]["surinam"] = surinam_bigrams[key]
+        cum_freq[key] = cum_freq.get(key, 0) + surinam_bigrams[key]
+
     plot_stacked_bars(cum_freq, freq_dist, 2)
-    # print(cum_freq[key])
-    # print(freq_dist)
+    plot_count_pie(totals.values(), CREOLE_NAMES)
