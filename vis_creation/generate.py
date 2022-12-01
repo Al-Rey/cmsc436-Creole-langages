@@ -13,13 +13,14 @@ COLOR_KEY = { "louisiana": "#a3adb9",
             "jamaican": "#e98629",
             "saramaccan": "#5fa2cd",
             "st lucia": "#c95200",
-            "martinique": "#58606d"
+            "martinique": "#58606d",
+            "nigerian": "#edaf72"
             }
 
 TEST_IMG_DIR = "vis_creation\\test_images\\"
 IMG_DIR = "vis_Creation/"
 
-CREOLE_NAMES = ["louisiana", "haitian", "jamaican", "saramaccan", "st lucia", "martinique"]
+CREOLE_NAMES = ["louisiana", "haitian", "jamaican", "saramaccan", "st lucia", "martinique", "nigerian"]
 
 NUM_CREOLES = len(CREOLE_NAMES)
 
@@ -265,7 +266,8 @@ if __name__ == '__main__':
     surinam_df = pd.read_csv("merging\suriname.csv", usecols=["Creole_word"])
     lucia_df = pd.read_csv("merging\stLucia.csv", usecols=["Creole_word"])
     mart_df = pd.read_csv("merging\martinique.csv", usecols=["Creole_word"])
-    
+    nigerian_df = pd.read_csv("merging\\nigeria.csv", usecols=[" creole_word"])
+    print(nigerian_df.head(10))
     # drop any NaN values from the dataframe
     louisiana_df.dropna(inplace=True)
     haitian_df.dropna(inplace=True)
@@ -273,6 +275,7 @@ if __name__ == '__main__':
     surinam_df.dropna(inplace=True)
     lucia_df.dropna(inplace=True)
     mart_df.dropna(inplace=True)
+    nigerian_df.dropna(inplace=True)
    
     # get the creole words from each dataframe
     words_col_louisiana = louisiana_df.loc[:, "creole_word"].tolist()
@@ -281,6 +284,7 @@ if __name__ == '__main__':
     words_col_surinam = surinam_df.loc[:, "Creole_word"].tolist()
     words_col_lucia = lucia_df.loc[:, "Creole_word"].tolist()
     words_col_mart = mart_df.loc[:, "Creole_word"].tolist()
+    words_col_nigerian = nigerian_df.loc[:, " creole_word"].tolist()
 
     words_louisiana, totals["louisiana"] = get_words(words_col_louisiana)
     words_haitian, totals["haitian"] = get_words(words_col_haitian)
@@ -288,6 +292,7 @@ if __name__ == '__main__':
     words_surinam, totals["saramaccan"] = get_words(words_col_surinam)
     words_lucia, totals["st lucia"] = get_words(words_col_lucia)
     words_mart, totals["martinique"] = get_words(words_col_mart)
+    words_nigerian, totals["nigerian"] = get_words(words_col_nigerian)
     
     
     # get the n-gram data
@@ -297,7 +302,8 @@ if __name__ == '__main__':
     jamaican_bigrams = create_ngrams(words_jamaican[:], n) 
     surinam_bigrams = create_ngrams(words_surinam[:], n) 
     lucia_bigrams = create_ngrams(words_lucia[:], n) 
-    mart_bigrams = create_ngrams(words_mart[:], n) 
+    mart_bigrams = create_ngrams(words_mart[:], n)
+    nigerian_bigrams = create_ngrams(words_nigerian[:], n) 
 
     # print("Louisiana Bigrams")
     # print(louisiana_bigrams)
@@ -309,6 +315,7 @@ if __name__ == '__main__':
     # plot_ngrams(surinam_bigrams, "Saramaccan Creole", COLOR_KEY["saramaccan"], n)
     # plot_ngrams(lucia_bigrams, "St. Lucia Creole", COLOR_KEY["st lucia"], n)
     # plot_ngrams(mart_bigrams, "Martinique Creole", COLOR_KEY["martinique"], n)
+    plot_ngrams(nigerian_bigrams, "Nigerian Creole", COLOR_KEY["nigerian"], n)
 
     cum_freq = {}
     freq_dist = {}
@@ -348,7 +355,14 @@ if __name__ == '__main__':
         freq_dist[key]["martinique"] = mart_bigrams[key]
         cum_freq[key] = cum_freq.get(key, 0) + mart_bigrams[key]
 
+    for key in list(nigerian_bigrams.keys()):
+        # i = key
+        freq_dist[key] = freq_dist.get(key, {})
+        freq_dist[key]["nigerian"] = nigerian_bigrams[key]
+        cum_freq[key] = cum_freq.get(key, 0) + nigerian_bigrams[key]
+
     plot_stacked_bars(cum_freq, freq_dist, n)
     plot_count_pie(totals.values(), CREOLE_NAMES)
-    # all_words = words_louisiana + words_haitian + words_jamaican + words_surinam + words_lucia + words_mart
-    # make_word_cloud(all_words)
+    all_words = words_louisiana + words_haitian + words_jamaican + words_surinam + words_lucia + words_mart
+    make_word_cloud(all_words)
+    
