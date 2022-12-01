@@ -3,21 +3,23 @@ import csv
 import ast
 
 ##  Global variables to define creole dictionary location and coordinates
-TEMP = open("location_polygon.json")
+TEMP = open("location_point.json")
 CREOLE_LOCATIONS = json.load(TEMP)
 
 CREOLE_DICTIONARY_LIST = {"Haitian Creole":"scraping_scripts/hatian_creole_dictionary_v4.csv",
     "Jamaican Creole":"scraping_scripts/Jamaican Creole.csv",
     "Louisiana Creole":"scraping_scripts/louisiana_creole_dictionary.csv",
     "Martinique Antillean Creole":"scraping_scripts/Excelmartinique.csv",
-    "St. Lucia Creole":"scraping_scripts/stLucia.csv",
-    "Saramaccan":"scraping_scripts/suriname.csv"
+    "Antillean Creole":"scraping_scripts/stLucia.csv",
+    "Suriname Saramaccan Creole":"scraping_scripts/suriname.csv",
+    "Nigerian Pidgin English":"scraping_scripts/nigeria.csv"
 }
 CREOLE_LIST =  ["Haitian Creole","Jamaican Creole","Louisiana Creole","Martinique Antillean Creole",
-    "St. Lucia Creole","Saramaccan"]
+    "Antillean Creole","Suriname Saramaccan Creole","Nigerian Pidgin English"]
 
 ACROLECT_LIST = {"Haitian Creole":"French","Jamaican Creole":"English","Louisiana Creole":"French",
-    "Martinique Antillean Creole":"French","St. Lucia Creole":"French","Saramaccan":"English-Portugese"}
+    "Martinique Antillean Creole":"French","Antillean Creole":"French","Suriname Saramaccan Creole":"English-Portugese",
+    "Nigerian Pidgin English":"English"}
 
 WORD_NOT_FOUND = "WORD_NOT_FOUND"
 
@@ -69,13 +71,14 @@ def creole_markers(word):
 
     english_dict = {"type":"FeatureCollection","features":[]}
     for creole in english_word:
-        english_dict["features"].append(
-            {
-            "type":"Feature",
-            "properties":{"creole_language": creole, "word": english_word[creole], 
-                "creole_word":word,"acrolect": ACROLECT_LIST[creole]},
-            "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Polygon"}
-            })
+        for latlon in CREOLE_LOCATIONS[creole]:
+            english_dict["features"].append(
+                {
+                "type":"Feature",
+                "properties":{"creole_language": creole, "word": english_word[creole], 
+                    "creole_word":word,"acrolect": ACROLECT_LIST[creole]},
+                "geometry":{"coordinates":latlon,"type":"Point"}
+                })
 
     #Converting Python Dictionary to Json
     english_json = json.dumps(english_dict)
@@ -100,13 +103,14 @@ def english_markers(word):
     #Creating Python Dictionary in form of geojson to be converted to json later
     creole_dict = {"type":"FeatureCollection","features":[]}
     for creole in creole_word:
-        creole_dict["features"].append(
-            {
-            "type":"Feature",
-            "properties":{"creole_language": creole, "word": word, 
-                "creole_word":creole_word[creole],"acrolect": ACROLECT_LIST[creole]},
-            "geometry":{"coordinates":CREOLE_LOCATIONS[creole],"type":"Polygon"}
-            })
+        for latlon in CREOLE_LOCATIONS[creole]:
+            creole_dict["features"].append(
+                {
+                "type":"Feature",
+                "properties":{"creole_language": creole, "word": word, 
+                    "creole_word":creole_word[creole],"acrolect": ACROLECT_LIST[creole]},
+                "geometry":{"coordinates":latlon,"type":"Point"}
+                })
 
     #Converting Python Dictionary to Json
     creole_json = json.dumps(creole_dict)
