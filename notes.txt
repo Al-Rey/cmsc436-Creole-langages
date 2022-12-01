@@ -7,7 +7,7 @@
     //    https://www.gistechsolutions.com/leaflet/DEMO/Simple/indexMap1.html -- geojson data setup
     //    https://gis.stackexchange.com/questions/317262/how-to-change-the-color-of-geojson-layer
 
-
+https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_images_side_by_side
 
 ##
 ## https://medium.com/geekculture/how-to-make-a-web-map-with-pythons-flask-and-leaflet-9318c73c67c3

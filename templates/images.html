@@ -1,7 +1,36 @@
-<h1>Percentage of Total Dictionary Entries by Language</h1>
-<img src="static/pie.png"style="width:800px;height:600px;"/>
+<!--This style block and the pie chart/word cloud formatting are just taken from w3schools
+https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_images_side_by_side-->
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    .column {
+      float: left;
+      width: 33.33%;
+      padding: 5px;
+    }
+    /* Clearfix (clear floats) */
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+</style>
 
-<h1>Letter Bigrams</h1>
+<!--Pie Chart and Word Cloud-->
+<div class="row">
+    <div class="column">
+        <h1>Percentage of Total Dictionary Entries by Language</h1>
+        <img src="static/pie.png"style="width:100%";/>
+    </div>
+    <div class="column">
+        <h1>Word Cloud For All Languages</h1>
+        <p>A word cloud showing the most frequent words across all the Creoles in our dataset. The bigger the word, the more times it occurred.</p>
+        <img src="static/word_cloud.png"style="width:100%"/>
+    </div>
+</div> 
+
+<h1>Letter Bigrams Per Language</h1>
 
 <img src="static/Haitian Creole_bigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
 <img src="static/Jamaican Creole_bigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
@@ -11,7 +40,10 @@
 <img src="static/Antilles Creole_bigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
 <img src="static/Nigerian Creole_bigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
 
-<h1>Letter Trigrams</h1>
+<h1>Letter Bigrams All Languages</h1>
+<img src="static/most_common_bigrams.png"style="width:1000px;height:600px;"/>
+
+<h1>Letter Trigrams Per Language</h1>
 <img src="static/Haitian Creole_trigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
 <img src="static/Jamaican Creole_trigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
 <img src="static/Louisiana Creole_trigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
@@ -19,4 +51,8 @@
 <img src="static/saramaccan Creole_trigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
 <img src="static/Antilles Creole_trigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
 <img src="static/Nigerian Creole_trigram_frequency_graphs.png"style="width:1000px;height:600px;"/>
+
+<h1>Letter Trigrams All Languages</h1>
+<img src="static/most_common_trigrams.png"style="width:1000px;height:600px;"/>
+
 
