@@ -5,6 +5,8 @@ import re
 
 from nltk.util import ngrams
 from operator import add
+from wordcloud import WordCloud, STOPWORDS
+from collections import Counter
 
 COLOR_KEY = { "louisiana": "#a3adb9",
             "haitian" : "#1170aa",
@@ -33,12 +35,14 @@ def get_words(og_list):
 
         if "," in temp:
             temp = temp.split(",")
+            print(temp)
             for word in temp:
                 if word.lower() not in blacklist:
-                    word_list.append(word.lower())
+                    word_list.append(word.lower().strip())
 
         elif temp.lower() not in blacklist:
-            word_list.append(temp.lower())
+            print(temp)
+            word_list.append(temp.lower().strip())
 
 
     return word_list, len(word_list)
@@ -158,7 +162,7 @@ def plot_count_pie(total_list, labels_raw=CREOLE_NAMES):
     plt.title("Distribution of Creole Words")
     plt.setp(autotexts, size = 8)
     plt.show() 
-    plt.savefig(TEST_IMG_DIR+"creole_pie_plot.png")
+    plt.savefig(TEST_IMG_DIR + "creole_pie_plot.png")
 
 def plot_stacked_bars(total, dist, n, include_haitian=True, creoles=CREOLE_NAMES):
     # sort the dictionary so the ngrams are in order by letter combination
@@ -196,7 +200,7 @@ def plot_stacked_bars(total, dist, n, include_haitian=True, creoles=CREOLE_NAMES
         title = "Most Common Bigrams"
         file_name = "most_common_bigrams.png"
     elif n == 3:
-        title1 = "Most Common Trigrams"
+        title = "Most Common Trigrams"
         file_name = "most_common_trigrams.png"
     else:
         title = "Most Common " + str(n) + "-grams"
@@ -224,7 +228,29 @@ def plot_stacked_bars(total, dist, n, include_haitian=True, creoles=CREOLE_NAMES
     plt.savefig(TEST_IMG_DIR+file_name)
     plt.show()
 
-# def get_common_freq()
+def make_word_cloud(word_list):
+    stopwords = set(STOPWORDS)
+    # big_string = ""
+    # for word in word_list:        
+    #     # Converts each token into lowercase
+    #     if word and len(word.strip()) > 1:  
+    #         big_string += " "+ word.strip() + " "
+    #     else:
+    #         print(word)
+    word_freq = Counter(word_list)
+ 
+    wordcloud = WordCloud(width = 800, height = 800,
+                    background_color ='white',
+                    stopwords = stopwords,
+                    min_font_size = 10).generate_from_frequencies(word_freq)
+    
+    # plot the WordCloud image                      
+    plt.figure(figsize = (8, 16), facecolor = None)
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.tight_layout(pad = 0)
+    
+    plt.show()
 
 if __name__ == '__main__':
     # creaoles = ["louisiana", "haitian", "jamaican", "surinam"]
@@ -262,9 +288,10 @@ if __name__ == '__main__':
     words_surinam, totals["saramaccan"] = get_words(words_col_surinam)
     words_lucia, totals["st lucia"] = get_words(words_col_lucia)
     words_mart, totals["martinique"] = get_words(words_col_mart)
-    print("lec",len(words_louisiana))
+    
+    
     # get the n-gram data
-    n = 2
+    n = 3
     louisiana_bigrams = create_ngrams(words_louisiana[:], n) 
     haitian_bigrams = create_ngrams(words_haitian[:], n) 
     jamaican_bigrams = create_ngrams(words_jamaican[:], n) 
@@ -276,12 +303,12 @@ if __name__ == '__main__':
     # print(louisiana_bigrams)
 
     # plot the ngrams
-    plot_ngrams(louisiana_bigrams, "Louisiana Creole", COLOR_KEY["louisiana"], n)
-    plot_ngrams(haitian_bigrams, "Haitian Creole", COLOR_KEY["haitian"], n)
-    plot_ngrams(jamaican_bigrams, "Jamaican Creole", COLOR_KEY["jamaican"], n)
-    plot_ngrams(surinam_bigrams, "Saramaccan Creole", COLOR_KEY["saramaccan"], n)
-    plot_ngrams(lucia_bigrams, "St. Lucia Creole", COLOR_KEY["st lucia"], n)
-    plot_ngrams(mart_bigrams, "Martinique Creole", COLOR_KEY["martinique"], n)
+    # plot_ngrams(louisiana_bigrams, "Louisiana Creole", COLOR_KEY["louisiana"], n)
+    # plot_ngrams(haitian_bigrams, "Haitian Creole", COLOR_KEY["haitian"], n)
+    # plot_ngrams(jamaican_bigrams, "Jamaican Creole", COLOR_KEY["jamaican"], n)
+    # plot_ngrams(surinam_bigrams, "Saramaccan Creole", COLOR_KEY["saramaccan"], n)
+    # plot_ngrams(lucia_bigrams, "St. Lucia Creole", COLOR_KEY["st lucia"], n)
+    # plot_ngrams(mart_bigrams, "Martinique Creole", COLOR_KEY["martinique"], n)
 
     cum_freq = {}
     freq_dist = {}
@@ -323,3 +350,5 @@ if __name__ == '__main__':
 
     plot_stacked_bars(cum_freq, freq_dist, n)
     plot_count_pie(totals.values(), CREOLE_NAMES)
+    # all_words = words_louisiana + words_haitian + words_jamaican + words_surinam + words_lucia + words_mart
+    # make_word_cloud(all_words)
