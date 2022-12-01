@@ -23,4 +23,15 @@ The visualizaitons generated in the `generate.py` plots the frequency of the mos
 - https://stackoverflow.com/questions/7422453/python-change-type-of-whole-list 
 - https://www.geeksforgeeks.org/bar-plot-in-matplotlib/ 
 - https://stackabuse.com/rotate-axis-labels-in-matplotlib/ 
+- https://www.geeksforgeeks.org/change-plot-size-in-matplotlib-python/ 
+- https://www.w3schools.com/python/python_regex.asp
+- https://www.geeksforgeeks.org/plot-a-pie-chart-in-python-using-matplotlib/
+- https://www.geeksforgeeks.org/python-adding-two-list-elements/
+- https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.pie.html
+- https://www.geeksforgeeks.org/generating-word-cloud-python/#:~:text=For%20generating%20word%20cloud%20in,from%20UCI%20Machine%20Learning%20Repository.
+- https://www.geeksforgeeks.org/create-a-stacked-bar-plot-in-matplotlib/
+- https://www.color-blindness.com/coblis-color-blindness-simulator/
+- https://amueller.github.io/word_cloud/generated/wordcloud.WordCloud.html#wordcloud.WordCloud
+- https://stackoverflow.com/questions/45588724/generating-word-cloud-for-items-in-a-list-in-python
+- https://imagecolorpicker.com/en
 

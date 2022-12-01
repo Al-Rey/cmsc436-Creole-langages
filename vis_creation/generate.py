@@ -246,12 +246,12 @@ def make_word_cloud(word_list):
                     min_font_size = 10).generate_from_frequencies(word_freq)
     
     # plot the WordCloud image                      
-    plt.figure(figsize = (8, 16), facecolor = None)
+    plt.figure(figsize = (8, 8), facecolor = None)
     plt.imshow(wordcloud)
     plt.axis("off")
     plt.tight_layout(pad = 0)
     plt.show()
-    plt.save(TEST_IMG_DIR+"word_cloud.png")
+    plt.savefig(TEST_IMG_DIR+"word_cloud.png")
 
 if __name__ == '__main__':
     # creaoles = ["louisiana", "haitian", "jamaican", "surinam"]
@@ -315,7 +315,7 @@ if __name__ == '__main__':
     # plot_ngrams(surinam_bigrams, "Saramaccan Creole", COLOR_KEY["saramaccan"], n)
     # plot_ngrams(ant_bigrams, "Antilles Creole", COLOR_KEY["antilles"], n)
     # plot_ngrams(mart_bigrams, "Martinique Creole", COLOR_KEY["martinique"], n)
-    plot_ngrams(nigerian_bigrams, "Nigerian Creole", COLOR_KEY["nigerian"], n)
+    # plot_ngrams(nigerian_bigrams, "Nigerian Creole", COLOR_KEY["nigerian"], n)
 
     cum_freq = {}
     freq_dist = {}
@@ -362,7 +362,7 @@ if __name__ == '__main__':
         cum_freq[key] = cum_freq.get(key, 0) + nigerian_bigrams[key]
 
     # plot_stacked_bars(cum_freq, freq_dist, n)
-    plot_count_pie(totals.values(), CREOLE_NAMES)
-    # all_words = words_louisiana + words_haitian + words_jamaican + words_surinam + words_ant + words_mart
-    # make_word_cloud(all_words)
+    # plot_count_pie(totals.values(), CREOLE_NAMES)
+    all_words = words_louisiana + words_haitian + words_jamaican + words_surinam + words_ant + words_mart + words_nigerian
+    make_word_cloud(all_words)
     
