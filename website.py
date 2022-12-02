@@ -22,6 +22,7 @@ def root():
     english_word = request.form.get('English')
     creole_word = request.form.get('Creole')
 
+    #Checks which selection box was used and creates the corresponsing markers
     if creole_word != None:
         word = creole_word
         markers = creole_markers(word)

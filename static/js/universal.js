@@ -4,6 +4,7 @@ function myFunc(vars) {
     return vars
 }
 
+//Adding features to each point to show up on rollover
 function onEachFeature(feature, layer) {
       layer.bindTooltip('<h1><p>Creole Language: '+feature.properties.creole_language+'</p></h1>'+'<p>Creole Word: '+feature.properties.creole_word+'</p>'
       +'<p>English/French Word: '+feature.properties.word+'</p>'+'<p>Acrolect: '+feature.properties.acrolect+'</p>');
